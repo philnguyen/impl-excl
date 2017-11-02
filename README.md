@@ -31,7 +31,7 @@ from part of Racket's base types.
      [negative? real?]
      [zero? number?]
      [number? any/c]
-     [not boolean?] ; `not` as synonymous for `false?`
+     [not boolean?] ; `not` as alias for `false?`
      [boolean? any/c])
    #:exclusions
    '({boolean? number?}
@@ -44,4 +44,3 @@ from part of Racket's base types.
 ```
 
 Declaring redundant relations (e.g. those already implied by the graph) is harmless.
-Predicates `implies?` and `excludes?` either return *definitely* `#t` or *maybe* `#f`.
