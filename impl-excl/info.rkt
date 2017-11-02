@@ -4,8 +4,9 @@
 
 (define deps '("base"
                "typed-racket-lib"
-               "typed-racket-more"))
+               "typed-racket-more"
+               "set-extras"))
 
-(define pkg-desc "Compute procedures for fast checking of implications and exclusions between simple predicates")
+(define pkg-desc "Compute procedures for fast checking of transitive implication and exclusion between simple predicates")
 
 (define pkg-authors '(pcn))

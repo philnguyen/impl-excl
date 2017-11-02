@@ -2,17 +2,19 @@
 
 (provide compute-impl-excl-procedures)
 
-(require racket/set)
+(require racket/set
+         set-extras)
 
 (: compute-impl-excl-procedures :
-   #:implications (Listof (List Symbol Symbol))
-   #:exclusions (Listof (Listof Symbol))
-   → (Values (Symbol Symbol → Boolean) (Symbol Symbol → Boolean)))
-(define (compute-impl-excl-procedures #:implications impls #:exclusions excls)
-
-  (define implications   : (Mutable-HashTable Symbol (Setof Symbol)) (make-hasheq))
-  (define exclusions     : (Mutable-HashTable Symbol (Setof Symbol)) (make-hasheq))
-  (define implications⁻¹ : (Mutable-HashTable Symbol (Setof Symbol)) (make-hasheq))
+   ([]
+    [#:implications (Listof (List Symbol Symbol))
+     #:exclusions (Listof (Listof Symbol))]
+    . ->* . (Values (Symbol Symbol → Boolean) (Symbol Symbol → Boolean))))
+(define (compute-impl-excl-procedures #:implications [impls '()]
+                                      #:exclusions [excls '()])
+  (define implications   : (Mutable-HashTable Symbol (℘ Symbol)) (make-hasheq))
+  (define exclusions     : (Mutable-HashTable Symbol (℘ Symbol)) (make-hasheq))
+  (define implications⁻¹ : (Mutable-HashTable Symbol (℘ Symbol)) (make-hasheq))
 
   (: add-impl! : Symbol Symbol → Void)
   (define (add-impl! p q)
@@ -43,9 +45,9 @@
       ;; symmetric
       (add-excl! q p)))
 
-  (: get-weakers   : Symbol → (Setof Symbol))
-  (: get-strongers : Symbol → (Setof Symbol))
-  (: get-excludeds : Symbol → (Setof Symbol))
+  (: get-weakers   : Symbol → (℘ Symbol))
+  (: get-strongers : Symbol → (℘ Symbol))
+  (: get-excludeds : Symbol → (℘ Symbol))
   (define (get-weakers   p) (hash-ref implications   p mk-∅))
   (define (get-strongers p) (hash-ref implications⁻¹ p mk-∅))
   (define (get-excludeds p) (hash-ref exclusions     p mk-∅))
@@ -61,12 +63,10 @@
   
   (values implies? excludes?))
 
-(: map-add! : (Mutable-HashTable Symbol (Setof Symbol)) Symbol Symbol → Void)
+(: map-add! : (Mutable-HashTable Symbol (℘ Symbol)) Symbol Symbol → Void)
 (define (map-add! m x y)
-  (hash-update! m x (λ ([ys : (Setof Symbol)]) (set-add ys y)) mk-∅))
+  (hash-update! m x (λ ([ys : (℘ Symbol)]) (set-add ys y)) mk-∅))
 
-(: map-has? : (HashTable Symbol (Setof Symbol)) → Symbol Symbol → Boolean)
+(: map-has? : (HashTable Symbol (℘ Symbol)) → Symbol Symbol → Boolean)
 (define ((map-has? m) x y)
   (set-member? (hash-ref m x mk-∅) y))
-
-(define mk-∅ (let ([∅ : (Setof Symbol) (seteq)]) (λ () ∅)))
