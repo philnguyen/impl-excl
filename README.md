@@ -15,7 +15,7 @@ The follow code declares and checks for some relationships between predicates
 from part of Racket's base types.
 
 ```racket
-#lang typed/racket/base
+#lang racket/base
 (require impl-excl)
 (define-values (implies? excludes?)
   ;; Part of Racket's base types and tags

@@ -39,3 +39,4 @@
   (check-false (implies? 'any/c q)))
 
 (check-true (implies? 'integer? 'number?))
+
