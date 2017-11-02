@@ -44,4 +44,3 @@ from part of Racket's base types.
 ```
 
 Declaring redundant relations (e.g. those already implied by the graph) is harmless.
-Predicates `implies?` and `excludes?` either return *definitely* `#t` or *maybe* `#f`.
